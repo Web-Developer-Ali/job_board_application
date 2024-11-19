@@ -4,9 +4,7 @@ import type { NextRequest } from "next/server";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
-  console.log(process.env.NEXTAUTH_SECRET)
-
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getToken({ req:req, secret: process.env.NEXTAUTH_SECRET });
   console.log(token);
 
   if (token !== null) {
