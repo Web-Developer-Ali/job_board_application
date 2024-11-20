@@ -168,6 +168,7 @@ export default function BrowseJobs() {
       setCurrentPage(1);
       setHasNextPage(response.data.jobs.length === ITEMS_PER_PAGE);
       setJobsCache({}); // Clear cache on new search
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching jobs:", error);
       toast({

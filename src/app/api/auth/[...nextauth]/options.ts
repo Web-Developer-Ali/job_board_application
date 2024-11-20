@@ -45,7 +45,9 @@ export const authOptions: NextAuthOptions = {
         await dbConnection();
         try {
           const email = credentials.email;
-          const user = await UserModel.findOne({ email }).select("+resumeUrl") as Document<IUser> & IUser;
+          const user = (await UserModel.findOne({ email }).select(
+            "+resumeUrl"
+          )) as Document<IUser> & IUser;
 
           // Check user is there or not
           if (!user) {
@@ -68,7 +70,7 @@ export const authOptions: NextAuthOptions = {
               return {
                 id: user._id.toString(),
                 email: user.email,
-                full_Name: user.full_Name ?? '',
+                full_Name: user.full_Name ?? "",
                 isVerified: user.isVerified,
                 onboardComplete: user.onboardComplete,
                 resumeUrl: user.resumeUrl,
@@ -117,8 +119,8 @@ export const authOptions: NextAuthOptions = {
             expireVerifyCode: new Date(),
             onboardComplete: false, // Set default for new users
             avatar: {
-              secure_url: (profile as { picture?: string })?.picture || '',
-              public_id: '',
+              secure_url: (profile as { picture?: string })?.picture || "",
+              public_id: "",
             },
           });
 
@@ -144,7 +146,7 @@ export const authOptions: NextAuthOptions = {
       // If user logs in with Credentials
       if (user) {
         token._id = user.id;
-        token.name = user.full_Name ?? '';
+        token.name = user.full_Name ?? "";
         token.isVerified = user.isVerified;
         token.onboardComplete = user.onboardComplete;
         token.resumeUrl = user.resumeUrl;
@@ -157,7 +159,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, token }) {
       // Pass the user data to the session object
       session.user._id = token._id;
-      session.user.name = token.name ?? '';
+      session.user.name = token.name ?? "";
       session.user.isVerified = token.isVerified;
       session.user.isNewUser = token.isNewUser;
       session.user.onboardComplete = token.onboardComplete;

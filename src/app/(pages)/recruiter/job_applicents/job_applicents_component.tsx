@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, useCallback } from "react";
 import { MdMoreHoriz } from "react-icons/md";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,6 +21,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface Applicant {
   _id: string;
@@ -30,11 +40,18 @@ interface Applicant {
   appliedAt: string;
 }
 
+interface ApiError {
+  error: string;
+}
+
 export default function ApplicantsPage() {
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [selectedApplicant, setSelectedApplicant] = useState<{ id: string; status: string } | null>(null);
   const searchParams = useSearchParams();
-const { toast } = useToast();
+  const { toast } = useToast();
+
   const fetchApplicants = useCallback(async () => {
     const jobId = searchParams.get("id");
     if (!jobId) {
@@ -52,40 +69,68 @@ const { toast } = useToast();
       setApplicants(response.data);
     } catch (error) {
       console.error("Error fetching applicants:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch applicants. Please try again.",
-        variant: "destructive",
-      });
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ApiError>;
+        toast({
+          title: "Error",
+          description: axiosError.response?.data?.error || "Failed to fetch applicants. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred while fetching applicants.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setLoading(false);
     }
-  }, [searchParams , toast]);
+  }, [searchParams, toast]);
 
   useEffect(() => {
     fetchApplicants();
   }, [fetchApplicants]);
 
   const updateApplicantStatus = useCallback(async (applicantId: string, status: string) => {
+    setSelectedApplicant({ id: applicantId, status });
+    setShowConfirmDialog(true);
+  }, []);
+
+  const confirmStatusUpdate = useCallback(async () => {
+    if (!selectedApplicant) return;
+
     try {
-      await axios.patch(`/api/recruiter/update_job_status?id=${applicantId}`, { status });
+      await axios.patch(`/api/recruiter/update_job_status?id=${selectedApplicant.id}`, { status: selectedApplicant.status });
       setApplicants((prev) =>
         prev.map((applicant) =>
-          applicant._id === applicantId ? { ...applicant, status } : applicant
+          applicant._id === selectedApplicant.id ? { ...applicant, status: selectedApplicant.status } : applicant
         )
       );
       toast({
-        description: `Applicant status updated to ${status}`,
+        description: `Applicant status updated to ${selectedApplicant.status}`,
       });
     } catch (error) {
       console.error("Error updating job status:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update applicant status. Please try again.",
-        variant: "destructive",
-      });
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ApiError>;
+        toast({
+          title: "Error",
+          description: axiosError.response?.data?.error || "Failed to update applicant status. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred while updating the status.",
+          variant: "destructive",
+        });
+      }
+    } finally {
+      setShowConfirmDialog(false);
+      setSelectedApplicant(null);
     }
-  }, [toast]);
+  }, [selectedApplicant, toast, setApplicants]);
 
   const getStatusBadgeColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -104,23 +149,23 @@ const { toast } = useToast();
         Job Applicants
       </h1>
       {loading ? (
-         <div
-         className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
-         aria-live="polite"
-         aria-busy="true"
-       >
-         <div className="flex flex-col items-center">
-           <div
-             className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
-             role="status"
-           >
-             <span className="sr-only">Loading...</span>
-           </div>
-           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-             Loading...
-           </p>
-         </div>
-       </div>
+        <div
+          className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="flex flex-col items-center">
+            <div
+              className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+              role="status"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
+              Loading...
+            </p>
+          </div>
+        </div>
       ) : applicants.length === 0 ? (
         <p className="text-center text-gray-600 dark:text-gray-300">No applicants found.</p>
       ) : (
@@ -179,6 +224,21 @@ const { toast } = useToast();
           </Table>
         </div>
       )}
+
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Confirm Status Change</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to change the status? This action can only be performed once and cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmStatusUpdate}>Confirm</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

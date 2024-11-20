@@ -7,6 +7,7 @@ interface ApplicantDocument extends Document {
   resumeUrl: string;
   appliedAt: Date;
   status: string;
+  is_statusChange:boolean;
   job: mongoose.Schema.Types.ObjectId;
   applicant_id: mongoose.Schema.Types.ObjectId; // Added applicant_id
   numberof_applicant:number
@@ -36,6 +37,11 @@ const ApplicantSchema: Schema<ApplicantDocument> = new Schema({
     type: String,
     enum: ['Accepted', 'Rejected', 'Pending'],
     required: true,
+  },
+  is_statusChange:{
+    type:Boolean,
+    required:true,
+    default:false
   },
   job: {
     type: mongoose.Schema.Types.ObjectId,

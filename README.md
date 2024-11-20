@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Job Board Application
+
+A Job Board application built using Next.js, MongoDB, TailwindCSS, and various other modern web technologies. This application allows users to register, log in, and apply for jobs, with features like email verification and secure password management.
+
+## Features
+
+- **User Authentication**:
+
+  - Users can register, log in, and manage their accounts.
+  - Email verification system for user registration.
+  - Password encryption using bcrypt.
+
+- **Job Listings**:
+
+  - Employers can post job opportunities.
+  - Job seekers can apply for available job listings.
+
+- **Responsive Design**:
+  - TailwindCSS ensures a mobile-friendly design that adjusts to different screen sizes.
+
+- **Real-time Notifications**:
+  - Send notifications (e.g., job updates, application status) via email.
+
+## Tech Stack
+
+- **Next.js**: React framework for server-side rendering and static site generation.
+- **MongoDB**: NoSQL database for storing user and job data.
+- **Mongoose**: ODM for MongoDB in Node.js, simplifying data modeling.
+- **TailwindCSS**: Utility-first CSS framework for custom design.
+- **NextAuth.js**: Authentication library for Next.js, providing login and session management.
+- **Bcrypt**: Library to hash and compare passwords securely.
+- **Nodemailer**: For sending email notifications (e.g., email verification).
+- **Radix UI**: For accessible UI components.
+- **Cloudinary**: For image storage and media uploads.
+- **Zod**: For schema validation.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+Make sure you have the following installed:
+
+- Node.js (v18 or above)
+- npm or yarn
+
+## Installation
+
+Follow these steps to get your development environment up and running:
+
+### 1. Clone the Repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Web-Developer-Ali/job_board_application
+
+### 2. Install dependencies
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+        npm install
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Run the development server:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+        npm run dev
 
-## Learn More
+### Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+├── src/
+│ ├── app/ # Pages and API routes in Next.js
+│ │ ├── (auth)/ # Authentication pages like Sign In and Sign Up
+│ │ ├── (pages)/ # All Static or dynamic pages
+│ │ │ ├── recruiter/ # Pages related to recruiters (e.g., posting jobs, managing applicants)
+│ │ ├── api/ # API routes for server-side functionality
+│ │ │ ├── applicant/ # API routes for managing applicants
+│ │ │ │ └── ... # Files for applicant-related functionalities (e.g., getApplicantDetails)
+│ │ │ ├── auth/ # API routes for authentication actions.
+│ │ │ │ └── ... # Files for user login, token verification
+│ │ │ ├── browse_jobs/ # API routes for browsing available jobs
+│ │ │ │ └── ... # File for searching/filtering jobs
+│ │ │ ├── getJobs_forhomepage/ # API routes for fetching jobs for the homepage
+│ │ │ │ └── ... # File for fetching job listings for homepage display
+│ │ │ ├── getJobTitles_forhomepage/ # API routes for fetching job titles for homepage
+│ │ │ │ └── ... # File for retrieving job titles for homepage
+│ │ │ ├── recruiter/ # API routes for recruiter-related actions (e.g., posting jobs, managing applicants)
+│ │ │ │ └── ... # Files for recruiters to manage their jobs and applicants
+│ │ │ ├── registration/ # API routes for user registration (sign up)
+│ │ │ │ └── ... # File for user registration and verification
+│ │ │ ├── user_profile/ # API routes for fetching and updating user profiles
+│ │ │ │ └── ... # Files for fetching and updating user profiles
+│ ├── components/ # Reusable UI components
+│ ├── lib/ # Utility functions and helpers
+│ ├── model/ # Mongoose models
+│ ├── styles/ # TailwindCSS configuration and global styles
+│ └── ... # Other code files
+├── public/ # Public assets (images, icons, etc.)
+├── .env.local # Environment variables
+├── package.json # Project dependencies and scripts
+└── README.md # Project documentation
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+This `README.md` includes:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- A clear description of your project.
+- The folder structure with details about the `/app/(pages)` and `/api` folders.
+- Installation instructions and environment variable setup.
+- Scripts for running and building the project.
+- Basic usage and functionality descriptions for mulit-role authentication, job listings , creating and email verification.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+You can copy this content into your `README.md` file to give contributors and developers a detailed guide on how to work with your project.

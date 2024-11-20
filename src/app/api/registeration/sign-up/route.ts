@@ -1,6 +1,7 @@
 import dbConnection from "@/lib/dbConnect";
 import UserModel from "@/model/UserSchema";
 import bcrypt from "bcrypt";
+import { sendEmail } from "@/helper/sendVerificationEmail"; 
 
 export async function POST(request: Request): Promise<Response> {
   await dbConnection();
@@ -18,6 +19,33 @@ export async function POST(request: Request): Promise<Response> {
           }),
           { status: 400, headers: { "Content-Type": "application/json" } }
         );
+      } else {
+        // Update the verification code and expiry for existing unverified user
+        existingUserByEmail.verifyCode = verifyCode;
+        const expireTime = new Date();
+        expireTime.setMinutes(expireTime.getMinutes() + 10);
+        existingUserByEmail.expireVerifyCode = expireTime;
+
+        await existingUserByEmail.save();
+
+        // Send OTP email
+        const emailResponse = await sendEmail({
+          type: "verification",
+          userEmail: email,
+          username: full_Name,
+          otp: verifyCode,
+        });
+        if (!emailResponse.ok) {
+          return emailResponse; // Forward the error response from sendEmail
+        }
+
+        return new Response(
+          JSON.stringify({
+            success: true,
+            message: "Verification email sent. Please check your email.",
+          }),
+          { status: 200, headers: { "Content-Type": "application/json" } }
+        );
       }
     } else {
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -33,15 +61,26 @@ export async function POST(request: Request): Promise<Response> {
         isVerified: false,
       });
       await newUser.save();
+
+      // Send OTP email
+      const emailResponse = await sendEmail({
+        type: "verification",
+        userEmail: email,
+        username: full_Name,
+        otp: verifyCode,
+      });
+      if (!emailResponse.ok) {
+        return emailResponse; // Forward the error response from sendEmail
+      }
+
+      return new Response(
+        JSON.stringify({
+          success: true,
+          message: "User registered successfully. Please verify your email.",
+        }),
+        { status: 201, headers: { "Content-Type": "application/json" } }
+      );
     }
-    // Send response to user
-    return new Response(
-      JSON.stringify({
-        success: true,
-        message: "User registered successfully. Please verify your email.",
-      }),
-      { status: 201, headers: { "Content-Type": "application/json" } }
-    );
   } catch (error) {
     console.log("Error registering User:", error);
     return new Response(
@@ -52,4 +91,4 @@ export async function POST(request: Request): Promise<Response> {
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
-};
+}

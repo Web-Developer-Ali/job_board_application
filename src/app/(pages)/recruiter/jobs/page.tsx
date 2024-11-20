@@ -9,6 +9,17 @@ import { useToast } from "@/hooks/use-toast";
 import JobCard from "@/components/Recruiter_jobs/JobCard";
 import JobTable from "@/components/Recruiter_jobs/JobTable";
 import { ApiResponce } from "@/types/ApiResponce";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
 
 interface CompanyLogo {
   public_id: string;
@@ -23,11 +34,11 @@ interface Job {
   createdAt: string;
 }
 
-const JobsPage: React.FC = () => {
+export default function JobsPage() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState<boolean>(false);
   const [jobToConfirm, setJobToConfirm] = useState<string | null>(null);
   const [isDeleteAction, setIsDeleteAction] = useState<boolean>(false);
   const router = useRouter();
@@ -81,7 +92,7 @@ const JobsPage: React.FC = () => {
     try {
       const response = await axios.delete<ApiResponce>(`/api/recruiter/delete_job?id=${jobToConfirm}`);
       setJobs(prevJobs => prevJobs.filter(job => job._id !== jobToConfirm));
-      setShowModal(false);
+      setShowConfirmDialog(false);
       setJobToConfirm(null);
       toast({ description: response.data.message });
     } catch (error) {
@@ -104,7 +115,7 @@ const JobsPage: React.FC = () => {
         live: currentStatus !== undefined ? !currentStatus : false,
       });
       toast({ description: response.data.message });
-      setShowModal(false);
+      setShowConfirmDialog(false);
       setJobs(prevJobs =>
         prevJobs.map(job =>
           job._id === id ? { ...job, live: currentStatus !== undefined ? !currentStatus : false } : job
@@ -130,7 +141,7 @@ const JobsPage: React.FC = () => {
   const handleConfirmAction = useCallback((id: string, action: "delete" | "toggle") => {
     setJobToConfirm(id);
     setIsDeleteAction(action === "delete");
-    setShowModal(true);
+    setShowConfirmDialog(true);
   }, []);
 
   const toggleMenu = useCallback((id: string) => {
@@ -143,31 +154,31 @@ const JobsPage: React.FC = () => {
         <h1 className="text-2xl font-bold text-gray-900 dark:text-white mt-10">
           All Posted Jobs
         </h1>
-        <button
+        <Button
           onClick={handleCreateJob}
-          className="px-4 py-2 text-sm font-medium text-white bg-blue-600 dark:bg-blue-500 rounded hover:bg-blue-700 dark:hover:bg-blue-400 mt-4 md:mt-10"
+          className="px-4 py-2 text-sm font-medium mt-4 md:mt-10"
         >
           Create New Job
-        </button>
+        </Button>
       </div>
       {loading ? (
-         <div
-         className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
-         aria-live="polite"
-         aria-busy="true"
-       >
-         <div className="flex flex-col items-center">
-           <div
-             className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
-             role="status"
-           >
-             <span className="sr-only">Loading...</span>
-           </div>
-           <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-             Loading...
-           </p>
-         </div>
-       </div>
+        <div
+          className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div className="flex flex-col items-center">
+            <div
+              className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"
+              role="status"
+            >
+              <span className="sr-only">Loading...</span>
+            </div>
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
+              Loading...
+            </p>
+          </div>
+        </div>
       ) : jobs.length === 0 ? (
         <p className="text-center text-gray-900 dark:text-gray-300">No jobs found.</p>
       ) : (
@@ -194,36 +205,28 @@ const JobsPage: React.FC = () => {
           </div>
         </div>
       )}
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-lg w-96">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
+      <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
               {isDeleteAction ? "Delete Job" : "Toggle Job Status"}
-            </h2>
-            <p className="text-gray-700 dark:text-gray-300 mb-4">
+            </AlertDialogTitle>
+            <AlertDialogDescription>
               {isDeleteAction
-                ? "Are you sure you want to delete this job?"
+                ? "Are you sure you want to delete this job? This action cannot be undone."
                 : "Are you sure you want to change the job status?"}
-            </p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 text-sm bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-200 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={isDeleteAction ? handleDelete : () => jobToConfirm && handleToggleLive(jobToConfirm, jobs.find(job => job._id === jobToConfirm)?.live)}
-                className="px-4 py-2 text-sm bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                {isDeleteAction ? "Delete" : "Toggle"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={isDeleteAction ? handleDelete : () => jobToConfirm && handleToggleLive(jobToConfirm, jobs.find(job => job._id === jobToConfirm)?.live)}
+            >
+              {isDeleteAction ? "Delete" : "Toggle"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
-};
-
-export default JobsPage;
+}

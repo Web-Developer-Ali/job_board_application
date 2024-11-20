@@ -57,6 +57,7 @@ export async function GET(request: Request) {
       job: jobId,
       applicant_id: session.user._id, 
       acceptingApplications: true, 
+      is_statusChange:false,
       status: "Pending", 
       numberof_applicant: applicantCount + 1
     });
