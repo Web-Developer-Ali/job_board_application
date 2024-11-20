@@ -51,9 +51,9 @@ Follow these steps to get your development environment up and running:
 
 ```bash
 git clone https://github.com/Web-Developer-Ali/job_board_application
-
-### 2. Install dependencies
+ 
 ```
+### 2. Install dependencies
 
         npm install
 
@@ -94,6 +94,8 @@ git clone https://github.com/Web-Developer-Ali/job_board_application
 ├── .env.local # Environment variables
 ├── package.json # Project dependencies and scripts
 └── README.md # Project documentation
+
+
 
 This `README.md` includes:
 
