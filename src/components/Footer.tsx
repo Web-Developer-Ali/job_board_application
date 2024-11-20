@@ -21,18 +21,18 @@ export default function Footer() {
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Company</h3>
             <ul className="space-y-2">
               <li><Link href="/about" className="hover:text-gray-900 dark:hover:text-white transition-colors">About Us</Link></li>
-              <li><Link href="/careers" className="hover:text-gray-900 dark:hover:text-white transition-colors">Careers</Link></li>
-              <li><Link href="/press" className="hover:text-gray-900 dark:hover:text-white transition-colors">Press</Link></li>
+              <li><Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Careers</Link></li>
+              <li><Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Press</Link></li>
             </ul>
           </nav>
 
           <nav className="space-y-3">
             <h3 className="text-sm font-semibold text-gray-900 dark:text-white uppercase tracking-wider">Resources</h3>
             <ul className="space-y-2">
-              <li><Link href="/blog" className="hover:text-gray-900 dark:hover:text-white transition-colors">Blog</Link></li>
-              <li><Link href="/help-center" className="hover:text-gray-900 dark:hover:text-white transition-colors">Help Center</Link></li>
-              <li><Link href="/privacy" className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy</Link></li>
-              <li><Link href="/terms" className="hover:text-gray-900 dark:hover:text-white transition-colors">Terms</Link></li>
+              <li><Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Blog</Link></li>
+              <li><Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Help Center</Link></li>
+              <li><Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Privacy</Link></li>
+              <li><Link href="#" className="hover:text-gray-900 dark:hover:text-white transition-colors">Terms</Link></li>
             </ul>
           </nav>
 
