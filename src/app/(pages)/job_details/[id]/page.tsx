@@ -25,7 +25,7 @@ export default async function JobDetails({ params }: JobDetailsProps) {
     : `https://${job.companyWebsite}`;
 
   return (
-    <div className="container mx-auto py-8 px-4 lg:px-0">
+    <div className="min-w-full min-h-full container mx-auto py-8 px-4 lg:px-0">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
         <div className="md:flex">
           <div className="md:flex-shrink-0">

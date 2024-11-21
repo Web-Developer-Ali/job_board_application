@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import JobCard from "@/components/JobCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -78,12 +78,20 @@ export default function BrowseJobs() {
       );
       setFilters({ ...data, salaryRanges });
     } catch (error) {
-      console.error("Error fetching filters:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch filters. Please try again.",
-        variant: "destructive",
-      });
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message: string }>;
+        toast({
+          title: "Job Filters Error",
+          description: axiosError.response?.data?.message || "Failed to Fetch jobs Filters. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Job Fetching Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   }, [toast]);
 
@@ -126,12 +134,20 @@ export default function BrowseJobs() {
         }));
         setHasNextPage(fetchedJobs.length === ITEMS_PER_PAGE);
       } catch (error) {
-        console.error("Error fetching jobs:", error);
-        toast({
-          title: "Job Fetching Error",
-          description: "Failed to fetch jobs. Please try again.",
-          variant: "destructive",
-        });
+        if (axios.isAxiosError(error)) {
+          const axiosError = error as AxiosError<{ message: string }>;
+          toast({
+            title: "Job Fetching Error",
+            description: axiosError.response?.data?.message || "Failed to fetch jobs. Please try again.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Job Fetching Error",
+            description: "An unexpected error occurred. Please try again.",
+            variant: "destructive",
+          });
+        }
       } finally {
         setIsLoading(false);
       }
@@ -170,12 +186,20 @@ export default function BrowseJobs() {
       setJobsCache({}); // Clear cache on new search
       setIsLoading(false);
     } catch (error) {
-      console.error("Error fetching jobs:", error);
-      toast({
-        title: "Search Error",
-        description: "Failed to search jobs. Please try again.",
-        variant: "destructive",
-      });
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<{ message: string }>;
+        toast({
+          title: "Job Search Error",
+          description: axiosError.response?.data?.message || "Failed to Search jobs. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Job Fetching Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsLoading(false);
     }

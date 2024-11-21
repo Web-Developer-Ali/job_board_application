@@ -18,7 +18,6 @@ export async function PATCH(request: Request) {
     // Parse the JSON body to get the status
     const body = await request.json();
     const status = body.status;
-console.log(status)
     if (typeof status !== 'string' || status.trim() === '') {
       return NextResponse.json(
         { error: "Invalid status provided" },
