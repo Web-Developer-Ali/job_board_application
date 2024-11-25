@@ -4,6 +4,8 @@ import { FaBriefcase, FaMoneyBillWave, FaClock } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 import ApplyButton from "./ApplyButton";
 import Image from "next/image";
+import nprogress from "nprogress";
+import "nprogress/nprogress.css";
 
 interface JobCardProps {
   companyPhoto: string;
@@ -47,8 +49,13 @@ const JobCard: React.FC<JobCardProps> = ({
   const days = Math.floor(differenceInMilliseconds / (1000 * 60 * 60 * 24));
   const router = useRouter();
  
-  const Job_Details = (id: string) => {
-    router.replace(`/job_details/${id}`);
+  const Job_Details = async (id: string) => {
+    nprogress.start(); // Start the progress bar
+    try {
+       router.replace(`/job_details/${id}`);
+    } finally {
+      nprogress.done(); // Stop the progress bar
+    }
   };
 
   // Limit the skills to 5, no option to show more

@@ -5,7 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import AuthProvider from "@/components/Providers";
 import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "next-themes";
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -46,6 +46,7 @@ export default function RootLayout({
           >
             <Navbar />
             <main>{children}</main>
+            <SpeedInsights />
             <Toaster />
           </ThemeProvider>
         </AuthProvider>

@@ -28,7 +28,7 @@ const ApplyButton: React.FC<ApplyButtonProps> = ({ jobId }) => {
         const axiosError = error as AxiosError<ApiError>;
         toast({
           title: "Error",
-          description: axiosError.response?.data?.error || "Failed to fetch applicants. Please try again.",
+          description: axiosError.response?.data?.error || "Failed to apply job. Please try again.",
           variant: "destructive",
         });
       } else {

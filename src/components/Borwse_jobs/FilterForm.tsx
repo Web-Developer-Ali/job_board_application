@@ -1,5 +1,5 @@
-// components/FilterForm.tsx
-import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface FilterOptions {
   locations: string[];
@@ -25,68 +25,46 @@ const FilterForm: React.FC<FilterFormProps> = ({
   setSalary,
   type,
   setType,
-  
 }) => (
   <div className="space-y-6">
     {filters?.locations && (
       <div className="space-y-2">
         <h3 className="text-base font-semibold dark:text-gray-200">Location</h3>
-        <div className="space-y-2">
+        <RadioGroup value={location} onValueChange={setLocation}>
           {filters.locations.map((loc) => (
-            <label key={loc} className="flex items-center space-x-2">
-              <Input
-                type="radio"
-                name="location"
-                value={loc}
-                checked={location === loc}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-4 h-4 dark:bg-gray-800"
-              />
-              <span className="dark:text-gray-300">{loc}</span>
-            </label>
+            <div key={loc} className="flex items-center space-x-2">
+              <RadioGroupItem value={loc} id={`location-${loc}`} />
+              <Label htmlFor={`location-${loc}`} className="text-sm dark:text-gray-300">{loc}</Label>
+            </div>
           ))}
-        </div>
+        </RadioGroup>
       </div>
     )}
 
     {filters?.salaryRanges && (
       <div className="space-y-2">
         <h3 className="text-base font-semibold dark:text-gray-200">Salary Range</h3>
-        <div className="space-y-2">
+        <RadioGroup value={salary} onValueChange={setSalary}>
           {filters.salaryRanges.map((range) => (
-            <label key={range} className="flex items-center space-x-2">
-              <Input
-                type="radio"
-                name="salary"
-                value={range}
-                checked={salary === range}
-                onChange={(e) => setSalary(e.target.value)}
-                className="w-4 h-4 dark:bg-gray-800"
-              />
-              <span className="dark:text-gray-300">{range}</span>
-            </label>
+            <div key={range} className="flex items-center space-x-2">
+              <RadioGroupItem value={range} id={`salary-${range}`} />
+              <Label htmlFor={`salary-${range}`} className="text-sm dark:text-gray-300">{range}</Label>
+            </div>
           ))}
-        </div>
+        </RadioGroup>
       </div>
     )}
 
     <div className="space-y-2">
       <h3 className="text-base font-semibold dark:text-gray-200">Job Type</h3>
-      <div className="space-y-2">
+      <RadioGroup value={type} onValueChange={setType}>
         {["Full-time", "Part-time", "Freelance", "Contract"].map((jobType) => (
-          <label key={jobType} className="flex items-center space-x-2">
-            <Input
-              type="radio"
-              name="jobType"
-              value={jobType}
-              checked={type === jobType}
-              onChange={(e) => setType(e.target.value)}
-              className="w-4 h-4 dark:bg-gray-800"
-            />
-            <span className="dark:text-gray-300">{jobType}</span>
-          </label>
+          <div key={jobType} className="flex items-center space-x-2">
+            <RadioGroupItem value={jobType} id={`jobType-${jobType}`} />
+            <Label htmlFor={`jobType-${jobType}`} className="text-sm dark:text-gray-300">{jobType}</Label>
+          </div>
         ))}
-      </div>
+      </RadioGroup>
     </div>
   </div>
 );

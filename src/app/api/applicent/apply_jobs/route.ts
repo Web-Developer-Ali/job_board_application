@@ -41,7 +41,7 @@ export async function GET(request: Request) {
 
     if (existingApplication) {
       return NextResponse.json(
-        { message: "You have already applied for this job." },
+        { error: "You have already applied for this job." },
         { status: 400 }
       );
     }
