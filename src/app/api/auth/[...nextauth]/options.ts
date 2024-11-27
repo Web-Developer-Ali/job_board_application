@@ -180,5 +180,5 @@ export const authOptions: NextAuthOptions = {
     updateAge: 24 * 60 * 60, // 1 day
   },
 
-  secret: process.env.NAXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
 };
