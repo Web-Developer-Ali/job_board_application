@@ -4,24 +4,22 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl;
-  console.log(process.env.NEXTAUTH_SECRET)
-  console.log(process.env.NEXTAUTH_URL)
   // Retrieve the token using next-auth's getToken method
-  const token = await getToken({ 
-    req, 
+  const token = await getToken({
+    req,
     secret: process.env.NEXTAUTH_SECRET,
-    secureCookie: process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL_URL
+    secureCookie:
+      process.env.NEXTAUTH_URL?.startsWith("https://") ??
+      !!process.env.VERCEL_URL,
   });
-console.log("vercel url:",process.env.VERCEL_URL)
-console.log(process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL_URL)
-  console.log("Token in middleware:", token);
 
   if (token) {
     // Logic for new users who haven't completed onboarding
     if (
       token.isNewUser === true &&
       token.onboardComplete === false &&
-      (url.pathname.startsWith("/sign-in") || url.pathname.startsWith("/sign-up"))
+      (url.pathname.startsWith("/sign-in") ||
+        url.pathname.startsWith("/sign-up"))
     ) {
       return NextResponse.redirect(
         new URL(`/onboard?email=${token.email}`, req.url)
@@ -30,7 +28,8 @@ console.log(process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VE
 
     // Redirect authenticated users away from sign-in or sign-up pages
     if (
-      url.pathname.startsWith("/sign-in") || url.pathname.startsWith("/sign-up")
+      url.pathname.startsWith("/sign-in") ||
+      url.pathname.startsWith("/sign-up")
     ) {
       return NextResponse.redirect(new URL("/", req.url));
     }
