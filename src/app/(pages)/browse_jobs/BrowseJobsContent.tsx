@@ -77,7 +77,7 @@ export default function BrowseJobs() {
         typeof range === "number" ? range.toString() : range
       )
       setFilters({ ...data, salaryRanges })
-    } catch (error) {
+    } catch {
       toast({
         title: "Job Filters Error",
         description: "Failed to fetch job filters. Please try again.",
@@ -114,7 +114,7 @@ export default function BrowseJobs() {
         [cacheKey]: fetchedJobs,
       }))
       setHasNextPage(fetchedJobs.length === ITEMS_PER_PAGE)
-    } catch (error) {
+    } catch {
       toast({
         title: "Job Fetching Error",
         description: "Failed to fetch jobs. Please try again.",
@@ -152,7 +152,7 @@ export default function BrowseJobs() {
       setCurrentPage(1)
       setHasNextPage(response.data.jobs.length === ITEMS_PER_PAGE)
       setJobsCache({}) // Clear cache on new search
-    } catch (error) {
+    } catch {
       toast({
         title: "Job Search Error",
         description: "Failed to search jobs. Please try again.",
