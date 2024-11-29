@@ -21,7 +21,7 @@ A Job Board application built using Next.js, MongoDB, TailwindCSS, and various o
 - **Real-time Notifications**:
   - Send notifications (e.g., job updates, application status) via email.
 
-## Tech Stack
+## 🛠️ Tech Stack
 
 - **Next.js**: React framework for server-side rendering and static site generation.
 - **MongoDB**: NoSQL database for storing user and job data.
@@ -34,7 +34,7 @@ A Job Board application built using Next.js, MongoDB, TailwindCSS, and various o
 - **Cloudinary**: For image storage and media uploads.
 - **Zod**: For schema validation.
 
-## Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -61,7 +61,7 @@ git clone https://github.com/Web-Developer-Ali/job_board_application
 
         npm run dev
 
-### Project Structure
+## 🏗️ Project Structuree
 
 ├── src/
 │ ├── app/ # Pages and API routes in Next.js
@@ -96,13 +96,24 @@ git clone https://github.com/Web-Developer-Ali/job_board_application
 └── README.md # Project documentation
 
 
+## 📚 Usage
 
-This `README.md` includes:
+- **For Job Seekers**:
 
-- A clear description of your project.
-- The folder structure with details about the `/app/(pages)` and `/api` folders.
-- Installation instructions and environment variable setup.
-- Scripts for running and building the project.
-- Basic usage and functionality descriptions for mulit-role authentication, job listings , creating and email verification.
+1. Register an account and verify your email.
+2. Browse job listings and apply for positions.
+3. Track your applications in your dashboard.
 
-You can copy this content into your `README.md` file to give contributors and developers a detailed guide on how to work with your project.
+- **For Employers**:
+
+1. Create a recruiter account.
+2. Post new job listings.
+3. Manage applications and communicate with candidates.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📞 Contact
+
+For any queries, please reach out to [alihamzashoaib65@gmail.com].
