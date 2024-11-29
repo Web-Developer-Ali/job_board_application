@@ -1,20 +1,18 @@
-import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(req: NextRequest) {
-  console.log("request:", req);
   const url = req.nextUrl;
-
-  // Ensure _vercel_jwt cookie is forwarded correctly
-  const jwtCookie = req.cookies.get("_vercel_jwt");
-  if (!jwtCookie) {
-    console.warn("No _vercel_jwt cookie found in the request.");
-  }
-
+  
   // Retrieve the token using next-auth's getToken method
-  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
-  console.log("token:", token);
+  const token = await getToken({ 
+    req, 
+    secret: process.env.NEXTAUTH_SECRET,
+    secureCookie: process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL_URL
+  });
+
+  console.log("Token in middleware:", token);
 
   if (token) {
     // Logic for new users who haven't completed onboarding
@@ -24,7 +22,7 @@ export async function middleware(req: NextRequest) {
       (url.pathname.startsWith("/sign-in") || url.pathname.startsWith("/sign-up"))
     ) {
       return NextResponse.redirect(
-        new URL(`/onboard/email=${token.email}`, req.url)
+        new URL(`/onboard?email=${token.email}`, req.url)
       );
     }
 
@@ -45,5 +43,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/sign-in", "/sign-up", "/recruiter/:path*"], // Protect recruiter routes
+  matcher: ["/", "/sign-in", "/sign-up", "/recruiter/:path*", "/onboard"],
 };
