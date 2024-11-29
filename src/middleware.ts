@@ -11,7 +11,8 @@ export async function middleware(req: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
     secureCookie: process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL_URL
   });
-
+console.log("vercel url:",process.env.VERCEL_URL)
+console.log(process.env.NEXTAUTH_URL?.startsWith("https://") ?? !!process.env.VERCEL_URL)
   console.log("Token in middleware:", token);
 
   if (token) {
